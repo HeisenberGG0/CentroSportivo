@@ -1,0 +1,353 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Modifica Prenotazione - Centro Sportivo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .booking-summary {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    
+    .booking-header {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .form-label {
+        font-weight: 500;
+    }
+    
+    .alert-warning {
+        border-left: 4px solid #ffc107;
+    }
+    
+    .booking-id {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .pricing-info {
+        background-color: rgba(102, 126, 234, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-1">
+                <i class="bi bi-pencil-square"></i> Modifica Prenotazione
+            </h1>
+            <p class="text-muted">Aggiorna i dettagli della tua prenotazione</p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user_type == 'cliente' %}
+                <a href="{% url 'centro_sportivo_app:mie_prenotazioni' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Torna alle mie prenotazioni
+                </a>
+            {% else %}
+                <a href="{% url 'centro_sportivo_app:modifica_prenotazione' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Torna alla gestione prenotazioni
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Colonna principale del form -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-event"></i> Dettagli Prenotazione
+                        </h5>
+                        <span class="booking-id">#{{ prenotazione.id }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if prenotazione.stato == 'richiesta' %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Questa prenotazione è ancora in attesa di conferma.
+                            {% if user_type == 'personale' %}
+                            <div class="mt-2">
+                                <a href="{% url 'centro_sportivo_app:conferma_prenotazione' prenotazione.id %}" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-circle"></i> Conferma ora
+                                </a>
+                                <a href="{% url 'centro_sportivo_app:annulla_prenotazione' prenotazione.id %}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Sei sicuro di voler annullare questa prenotazione?');">
+                                    <i class="bi bi-x-circle"></i> Annulla
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.impianto.id_for_label }}" class="form-label">Impianto</label>
+                            {{ form.impianto }}
+                            {% if form.impianto.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.impianto.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="{{ form.data.id_for_label }}" class="form-label">Data</label>
+                                {{ form.data }}
+                                {% if form.data.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.data.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.ora_inizio.id_for_label }}" class="form-label">Ora Inizio</label>
+                                {{ form.ora_inizio }}
+                                {% if form.ora_inizio.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.ora_inizio.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.ora_fine.id_for_label }}" class="form-label">Ora Fine</label>
+                                {{ form.ora_fine }}
+                                {% if form.ora_fine.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.ora_fine.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mb-3">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="pricing-info">
+                            <h6 class="mb-3"><i class="bi bi-info-circle"></i> Informazioni Tariffarie</h6>
+                            <p>Impianto selezionato: <strong id="impianto-nome">{{ prenotazione.impianto.nome }}</strong></p>
+                            <p>Tariffa oraria: <strong id="tariffa-oraria">€{{ prenotazione.impianto.tariffa_oraria|floatformat:2 }}</strong></p>
+                            <p>Durata prenotazione: <strong id="durata">{{ prenotazione.durata_ore|floatformat:1 }} ore</strong></p>
+                            <hr>
+                            <p class="mb-0">Importo stimato: <strong id="importo-stimato">€{{ prenotazione.importo_totale|floatformat:2 }}</strong></p>
+                            <small class="text-muted">L'importo finale potrebbe variare in base alle tariffe dell'impianto selezionato.</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            {% if user_type == 'cliente' %}
+                                <a href="{% url 'centro_sportivo_app:mie_prenotazioni' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x"></i> Annulla
+                                </a>
+                            {% else %}
+                                <a href="{% url 'centro_sportivo_app:gestione_prenotazioni_filtrate' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x"></i> Annulla
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Salva Modifiche
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonna laterale -->
+        <div class="col-lg-4">
+            <!-- Riepilogo prenotazione corrente -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Riepilogo Attuale
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="booking-summary">
+                        <div class="booking-header">
+                            <span class="badge {% if prenotazione.stato == 'richiesta' %}bg-warning{% elif prenotazione.stato == 'confermata' %}bg-success{% elif prenotazione.stato == 'annullata' %}bg-secondary{% else %}bg-info{% endif %} mb-2">
+                                {% if prenotazione.stato == 'richiesta' %}
+                                    In Attesa
+                                {% elif prenotazione.stato == 'confermata' %}
+                                    Confermata
+                                {% elif prenotazione.stato == 'annullata' %}
+                                    Annullata
+                                {% else %}
+                                    Completata
+                                {% endif %}
+                            </span>
+                            
+                            <h5 class="mb-1">{{ prenotazione.impianto.nome }}</h5>
+                            <p class="text-muted mb-0">{{ prenotazione.impianto.get_tipologia_display }}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="row mb-2">
+                                <div class="col-5 text-muted">Data:</div>
+                                <div class="col-7 fw-bold">{{ prenotazione.data|date:"l d F Y" }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5 text-muted">Orario:</div>
+                                <div class="col-7 fw-bold">{{ prenotazione.ora_inizio|time:"H:i" }} - {{ prenotazione.ora_fine|time:"H:i" }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5 text-muted">Durata:</div>
+                                <div class="col-7 fw-bold">{{ prenotazione.durata_ore|floatformat:1 }} ore</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5 text-muted">Importo:</div>
+                                <div class="col-7 fw-bold">€{{ prenotazione.importo_totale|floatformat:2 }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5 text-muted">Pagamento:</div>
+                                <div class="col-7">
+                                    {% if prenotazione.pagamento_effettuato %}
+                                        <span class="badge bg-success">Pagato</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Da pagare</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between text-muted small">
+                            <div>
+                                <i class="bi bi-clock-history"></i> Creata: {{ prenotazione.data_creazione|date:"d/m/Y H:i" }}
+                            </div>
+                            <div>
+                                <i class="bi bi-pencil"></i> Ultima modifica: {{ prenotazione.data_modifica|date:"d/m/Y H:i" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info cliente (solo per staff) -->
+            {% if user_type == 'personale' %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person"></i> Dettagli Cliente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div class="me-3">
+                            <div class="bg-light rounded-circle p-3 text-center" style="width: 60px; height: 60px;">
+                                <i class="bi bi-person-fill fs-3 text-primary"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ prenotazione.cliente.get_full_name }}</h6>
+                            <p class="text-muted mb-0">{{ prenotazione.cliente.username }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1"><i class="bi bi-envelope me-2"></i> {{ prenotazione.cliente.email }}</p>
+                        {% if prenotazione.cliente.telefono %}
+                            <p class="mb-1"><i class="bi bi-telephone me-2"></i> {{ prenotazione.cliente.telefono }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-chat-dots me-1"></i> Contatta Cliente
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-list-ul me-1"></i> Visualizza Storico Prenotazioni
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Note per staff -->
+            {% if user_type == 'personale' %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-sticky"></i> Note per lo Staff
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                            Verifica che la nuova data/orario non crei sovrapposizioni
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-info-circle text-info me-2"></i>
+                            L'importo verrà ricalcolato automaticamente in base alla durata
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-bell text-primary me-2"></i>
+                            Notifica il cliente in caso di modifica sostanziale
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const impiantoSelect = document.getElementById('{{ form.impianto.id_for_label }}');
+        const oraInizioInput = document.getElementById('{{ form.ora_inizio.id_for_label }}');
+        const oraFineInput = document.getElementById('{{ form.ora_fine.id_for_label }}');
+        
+        // Funzione per aggiornare le informazioni di prezzo
+        function updatePriceInfo() {
+            const selectedOption = impiantoSelect.options[impiantoSelect.selectedIndex];
+            if (selectedOption) {
+                // In una implementazione reale, questi valori sarebbero recuperati da un API
+                // Per ora, usiamo i valori predefiniti dalla prenotazione
+                const impiantoNome = selectedOption.text;
+                document.getElementById('impianto-nome').textContent = impiantoNome;
+                
+                // Calcola durata
+                if (oraInizioInput.value && oraFineInput.value) {
+                    const oraInizio = new Date(`2000-01-01T${oraInizioInput.value}`);
+                    const oraFine = new Date(`2000-01-01T${oraFineInput.value}`);
+                    
+                    if (oraFine > oraInizio) {
+                        const durata = (oraFine - oraInizio) / (1000 * 60 * 60);
+                        document.getElementById('durata').textContent = durata.toFixed(1) + ' ore';
+                        
+                        // Simulazione calcolo importo (in realtà verrebbe fatto lato server)
+                        const tariffa = parseFloat('{{ prenotazione.impianto.tariffa_oraria }}');
+                        const importo = durata * tariffa;
+                        document.getElementById('importo-stimato').textContent = '€' + importo.toFixed(2);
+                    }
+                }
+            }
+        }
+        
+        // Aggiungi listener per gli eventi di cambio
+        impiantoSelect.addEventListener('change', updatePriceInfo);
+        oraInizioInput.addEventListener('change', updatePriceInfo);
+        oraFineInput.addEventListener('change', updatePriceInfo);
+    });
+</script>
+{% endblock %}

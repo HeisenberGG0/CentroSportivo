@@ -1,0 +1,136 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Elimina Evento{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:lista_eventi' %}">Eventi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Elimina</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="bi bi-trash"></i> Elimina Evento
+                    </h2>
+                    <p class="text-muted mb-0">Sei sicuro di voler eliminare questo evento?</p>
+                </div>
+                <div>
+
+                        <i class="bi bi-x-circle"></i> Annulla
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Conferma Eliminazione
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-4">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle"></i> Attenzione!
+                        </h5>
+                        <p class="mb-0">
+                            Stai per eliminare definitivamente l'evento <strong>"{{ evento.nome }}"</strong>. 
+                            Questa operazione non può essere annullata e comporterà la cancellazione di tutte le iscrizioni associate.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-2">Informazioni sull'evento</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Data
+                                <span>{{ evento.data_ora_inizio|date:"d/m/Y" }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Orario
+                                <span>{{ evento.data_ora_inizio|date:"H:i" }} - {{ evento.data_ora_fine|date:"H:i" }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Partecipanti
+                                <span class="badge bg-{% if num_partecipanti > 0 %}warning{% else %}success{% endif %} rounded-pill">
+                                    {{ num_partecipanti }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post" action="{% url 'centro_sportivo_app:elimina_evento' evento.id %}">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="conferma" class="form-label">
+                                Per confermare l'eliminazione, digita <strong>elimina</strong> nel campo sottostante:
+                            </label>
+                            <input type="text" class="form-control" id="conferma" name="conferma" required
+                                   placeholder="elimina">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Elimina Definitivamente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Impatto Eliminazione
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">L'eliminazione di questo evento comporterà:</p>
+                    <ul class="mb-0">
+                        <li class="mb-2">Cancellazione di tutte le iscrizioni ({{ num_partecipanti }})</li>
+                        <li class="mb-2">Liberazione degli impianti associati</li>
+                        <li class="mb-2">Rimozione da tutte le pagine del sito</li>
+                        <li>Impossibilità di ripristino</li>
+                    </ul>
+                </div>
+            </div>
+            
+            {% if num_partecipanti > 0 %}
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people"></i> Partecipanti Iscritti
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>{{ num_partecipanti }}</strong> persone sono iscritte a questo evento.
+                    </p>
+                    <p class="mb-0">
+                        L'eliminazione comporterà la cancellazione delle loro iscrizioni. 
+                        Valuta se avvisare i partecipanti prima di procedere con l'eliminazione.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

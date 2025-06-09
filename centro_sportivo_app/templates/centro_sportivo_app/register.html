@@ -1,0 +1,234 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Registrazione{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-plus"></i> Registrazione Cliente
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">
+                                    <i class="bi bi-person"></i> Nome *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="nome" 
+                                       name="nome" 
+                                       required 
+                                       maxlength="20"
+                                       placeholder="Il tuo nome">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="cognome" class="form-label">
+                                    <i class="bi bi-person"></i> Cognome *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="cognome" 
+                                       name="cognome" 
+                                       required 
+                                       maxlength="20"
+                                       placeholder="Il tuo cognome">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-at"></i> Username *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="username" 
+                                   name="username" 
+                                   required 
+                                   maxlength="15"
+                                   minlength="3"
+                                   pattern="[a-zA-Z0-9]+"
+                                   title="Il nome utente deve contenere solo lettere e numeri e deve essere composto da 3-15 caratteri."
+                                   placeholder="Scegli un username unico">
+                            <div class="form-text">Deve contenere solo lettere e numeri e deve essere composto da 3-15 caratteri</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email *
+                            </label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   required
+                                   placeholder="la_tua_email@esempio.com">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">
+                                    <i class="bi bi-telephone"></i> Telefono
+                                </label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="telefono" 
+                                       name="telefono"
+                                       pattern="[0-9]{10,15}"
+                                       title="Il numero di telefono deve contenere solo cifre (minimo 10, massimo 15) e può iniziare con un '+' per il prefisso internazionale."
+                                       placeholder="+39 123 456 7890">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="codice_fiscale" class="form-label">
+                                    <i class="bi bi-card-text"></i> Codice Fiscale
+                                </label>
+                                <input type="text" 
+                                       class="form-control text-uppercase" 
+                                       id="codice_fiscale" 
+                                       name="codice_fiscale" 
+                                       maxlength="16"
+                                       minlength="10"
+                                       pattern="[A-Z0-9]{16}"
+                                       title="Il codice fiscale deve contenere solo lettere maiuscole e numeri e deve essere composto da 16 caratteri."
+                                       placeholder="ABCDEF12G34H567I">
+                                <div class="form-text">Opzionale - 16 caratteri alfanumerici</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password *
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   minlength="8"
+                                   pattern=".{8,}"
+                                   title="La password deve contenere almeno 8 caratteri."
+                                   placeholder="Scegli una password sicura">
+                            <div class="form-text">Minimo 8 caratteri</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="terms" 
+                                       required>
+                                <label class="form-check-label" for="terms">
+                                    Accetto i termini e le condizioni del servizio *
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus"></i> Registrati
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer text-center py-3">
+                    <p class="mb-0">
+                        Hai già un account? 
+                        <a href="{% url 'centro_sportivo_app:login' %}" class="text-decoration-none">
+                            <i class="bi bi-box-arrow-in-right"></i> Accedi qui
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Section -->
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success" role="alert">
+                <h5 class="alert-heading">
+                    <i class="bi bi-check-circle"></i> Registrazione Gratuita
+                </h5>
+                <p class="mb-1">
+                    La registrazione è completamente gratuita e ti permetterà di accedere a tutte le funzionalità del nostro centro sportivo:
+                </p>
+                <ul class="mb-0">
+                    <li>Prenotazione online dei campi sportivi</li>
+                    <li>Iscrizione agli eventi e tornei</li>
+                    <li>Gestione del tuo profilo personale</li>
+                    <li>Storico delle prenotazioni e pagamenti</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary-custom:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.5);
+    }
+    
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .form-check-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-uppercase per codice fiscale
+    document.getElementById('codice_fiscale').addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+
+    // Validazione password
+    document.getElementById('password').addEventListener('input', function(e) {
+        const password = e.target.value;
+        const button = document.querySelector('button[type="submit"]');
+
+        if (password.length < 6) {
+            e.target.classList.add('is-invalid');
+            button.disabled = true;
+        } else {
+            e.target.classList.remove('is-invalid');
+            e.target.classList.add('is-valid');
+            button.disabled = false;
+        }
+    });
+</script>
+{% endblock %}

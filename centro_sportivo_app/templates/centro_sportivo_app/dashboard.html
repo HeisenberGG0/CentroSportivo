@@ -1,0 +1,333 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header di benvenuto -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="bg-primary text-white rounded p-4">
+                <h2 class="mb-2">
+                     Benvenuto, {{ utente.get_full_name }}!
+                </h2>
+                <p class="mb-0 lead">
+                    {% if user_type == 'cliente' %}
+                        Gestisci le tue prenotazioni e scopri i nostri eventi messi a disposizione per te.
+                    {% else %}
+                        Pannello di controllo per la gestione del centro sportivo.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiche -->
+    <div class="row g-4 mb-5">
+        {% if user_type == 'cliente' %}
+            <!-- Statistiche del cliente -->
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Registrato dal</h6>
+                                <h6 class="mb-0">{{ utente.data_registrazione|date:"d/m/Y" }}</h6>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-person-badge fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Ultimo Accesso</h6>
+                                <h6 class="mb-0">
+                                    {% if utente.ultimo_accesso %}
+                                        {{ utente.ultimo_accesso|date:"d/m H:i" }}
+                                    {% else %}
+                                        Primo accesso
+                                    {% endif %}
+                                </h6>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-clock-history fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-lg-4">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Vedi Personale</h6>
+                                  <h8 class="card-title">Scopri lo staff del centro</h8>
+                                </a>
+                            </div>
+                            <div class="align-self-center">
+                                 <a href="{% url 'centro_sportivo_app:gestione_personale' %}" class="btn btn-light">
+                                    <i class="bi bi-eye "></i> Vedi ora
+                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        {% else %}
+            <!-- Statistiche personali dello staff -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Prenotazioni Gestite</h6>
+                                <h3 class="mb-0">{{ prenotazioni_gestite }}</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-clipboard-check fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Eventi Organizzati</h6>
+                                <h3 class="mb-0">{{ eventi_organizzati }}</h3>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-calendar-plus fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Ruolo</h6>
+                                <h6 class="mb-0">{{ utente.get_ruolo_display }}</h6>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-person-workspace fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">In servizio dal</h6>
+                                <h6 class="mb-0">{{ utente.data_assunzione|date:"d/m/Y" }}</h6>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-briefcase fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Menù azioni rapide -->
+    <div class="row mb-5">
+        <div class="col">
+            <h4 class="mb-3"><i class="bi bi-lightning"></i> Azioni Rapide</h4>
+            
+            {% if user_type == 'cliente' %}
+                <!-- Possibili azioni del cliente -->
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-plus display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Nuova Prenotazione</h5>
+                                <p class="card-text">Prenota un campo tra quelli disponibili</p>
+                                    <a href="{% url 'centro_sportivo_app:nuova_prenotazione' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-square "></i> Prenota Ora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-list-ul display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Le Mie Prenotazioni</h5>
+                                <p class="card-text">Visualizza e gestisci le tue prenotazioni per campi ed eventi</p>
+                                <a href="{% url 'centro_sportivo_app:mie_prenotazioni' %}" class="btn btn-primary">
+                                    <i class="bi bi-eye"></i> Visualizza
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-event display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Eventi Disponibili</h5>
+                                <p class="card-text">Scopri eventi e tornei a cui partecipare</p>
+                                <a href="{% url 'centro_sportivo_app:lista_eventi' %}" class="btn btn-primary">
+                                    <i class="bi bi-journal"></i> Esplora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Cerca Disponibilità</h5>
+                                <p class="card-text">Verifica la disponibilità degli impianti</p>
+                                <a href="{% url 'centro_sportivo_app:ricerca_disponibilita' %}" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Cerca
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            {% else %}
+                <!-- Possibili azioni dello staff -->
+                <div class="row g-3">
+                    <div class="col-md-5 col-lg-4">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-clipboard-data display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Visualizza Prenotazioni</h5>
+                                <p class="card-text">Visualizza tutte le prenotazioni del centro</p>
+                                <a href="{% url 'centro_sportivo_app:gestione_prenotazioni' %}" class="btn btn-primary">
+                                    <i class="bi bi-gear"></i> Gestisci
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-5 col-lg-4">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-plus display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Crea Evento</h5>
+                                <p class="card-text">Organizza nuovi eventi e tornei per i clienti</p>
+                                <a href="{% url 'centro_sportivo_app:crea_evento' %}" class="btn btn-primary ">
+                                    <i class="bi bi-plus-circle"></i> Crea
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="col-md-5 col-lg-4">
+                        <div class="card h-100 text-center">
+                            <div class="card-body">
+                                <i class="bi bi-eye display-4 text-primary mb-3"></i>
+                                <h5 class="card-title">Gestisci eventi</h5>
+                                <p class="card-text">Visualizza e gestisci gli eventi del centro</p>
+                                <a href="{% url 'centro_sportivo_app:lista_eventi' %}" class="btn btn-primary ">
+                                    <i class="bi bi-plus-circle"></i> Visualizza
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+        
+        <div class="col-lg-9 offset-lg-1 col-xl-8 offset-xl-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-circle"></i> Profilo
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-person-circle display-4 text-primary"></i>
+                        <h5 class="mt-2">{{ utente.get_full_name }}</h5>
+                        <p class="text-muted">
+                            {% if user_type == 'cliente' %}
+                                Cliente
+                            {% else %}
+                                {{ utente.get_ruolo_display }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0">
+                            <small class="text-muted">Username:</small><br>
+                            <strong>{{ utente.username }}</strong>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <small class="text-muted">Email:</small><br>
+                            <strong>{{ utente.email }}</strong>
+                        </div>
+                        {% if utente.telefono %}
+                        <div class="list-group-item px-0">
+                            <small class="text-muted">Telefono:</small><br>
+                            <strong>{{ utente.telefono }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if user_type == 'personale' %}
+                        <div class="list-group-item px-0">
+                            <small class="text-muted">Orario di Servizio:</small><br>
+                            <strong>{{ utente.orario_servizio }}</strong>
+                        </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .list-group-item {
+        border-color: rgba(0,0,0,.05);
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Le Mie Prenotazioni{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="h3 mb-0">Le Mie Prenotazioni</h1>
+            <p class="text-muted">Gestisci le tue prenotazioni al centro sportivo</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Totali</h5>
+                        <p class="card-text display-6">{{ stats.totali }}</p>
+                    </div>
+                    <i class="fas fa-calendar fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Attesa</h5>
+                        <p class="card-text display-6">{{ stats.attesa }}</p>
+                    </div>
+                    <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Annullate</h5>
+                        <p class="card-text display-6">{{ stats.annullate }}</p>
+                    </div>
+                    <i class="fas fa-ban fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a href="{% url 'centro_sportivo_app:nuova_prenotazione' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i>Nuova Prenotazione
+            </a>
+            <a href="{% url 'centro_sportivo_app:ricerca_disponibilita' %}" class="btn btn-outline-info ms-2">
+                <i class="fas fa-search me-2"></i>Verifica Disponibilità
+            </a>
+            <a href="{% url 'centro_sportivo_app:dashboard' %}" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-arrow-left me-2"></i>Torna alla Dashboard
+            </a>
+            <a href="{% url 'centro_sportivo_app:miei_eventi' %}" class="btn btn-outline-danger ms-2">
+                <i class="fas fa-arrow-left me-2"></i>Vedi i tuoi eventi
+            </a>
+        </div>
+    </div>
+
+    {% if prenotazioni %}
+    <!-- Prenotazioni Tabs -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-tabs card-header-tabs" id="prenotazioni-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tutte-tab" data-bs-toggle="tab" data-bs-target="#tutte" type="button" role="tab" aria-controls="tutte" aria-selected="true">
+                                Tutte ({{ stats.totali }})
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="prenotazioni-tabs-content">
+                        <!-- Tutte le prenotazioni -->
+<!-- Tutte le prenotazioni -->
+<div class="tab-pane fade show active" id="tutte" role="tabpanel" aria-labelledby="tutte-tab">
+    {% if prenotazioni %}
+        <div class="row">
+            {% for prenotazione in prenotazioni %}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <strong class="card-title">{{ prenotazione.impianto.nome }}</strong>
+                            <p class="card-text">
+                                <strong>Data:</strong> {{ prenotazione.data|date:"d/m/Y" }}<br>
+                                <strong>Orario:</strong> {{ prenotazione.ora_inizio }} - {{ prenotazione.ora_fine }}<br>
+                                <strong>Stato:</strong>
+                                <span class="badge {% if prenotazione.stato == 'attesa' %}bg-success{% elif prenotazione.stato == 'annullata' %}bg-warning bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ prenotazione.get_stato_display }}
+                                </span>
+                            </p>
+                            {% if prenotazione.note %}
+                                <p class="card-text"><small class="text-muted">{{ prenotazione.note }}</small></p>
+                            {% endif %}
+
+                            <!-- Bottoni Azioni -->
+                            {% if prenotazione.stato != 'annullata' %}
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="{% url 'centro_sportivo_app:modifica_prenotazione' prenotazione.id %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i> Modifica
+                                </a>
+                                <a href="{% url 'centro_sportivo_app:annulla_prenotazione' prenotazione.id %}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Sei sicuro di voler annullare questa prenotazione?')">
+                                    <i class="bi bi-x-circle"></i> Annulla
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Nessuna prenotazione trovata.
+        </div>
+    {% endif %}
+</div>
+
+    {% else %}
+    <!-- No prenotazioni -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                    <h4>Nessuna prenotazione trovata</h4>
+                    <p class="text-muted">Non hai ancora effettuato prenotazioni al centro sportivo.</p>
+                    <a href="{% url 'centro_sportivo_app:nuova_prenotazione' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus-circle me-2"></i>Crea la tua prima prenotazione
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

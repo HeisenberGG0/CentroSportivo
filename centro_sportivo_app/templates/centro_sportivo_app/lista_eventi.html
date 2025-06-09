@@ -1,0 +1,212 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Eventi{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="bi bi-calendar-event"></i> Eventi Sportivi
+                    </h2>
+                    <p class="text-muted mb-0">Scopri e partecipa agli eventi organizzati dal nostro centro sportivo</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <!-- Pulsante Miei Eventi (visibile solo se loggato) -->
+                    {% if  user_type == 'cliente' or request.session.user_id  %}
+                    <a href="{% url 'centro_sportivo_app:miei_eventi' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-check"></i> I Miei Eventi
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Eventi Futuri -->
+    <div class="row mb-5">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-week"></i> Prossimi Eventi
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if eventi %}
+                        <div class="list-group list-group-flush">
+                            {% for evento in eventi %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2 text-center">
+                                            <div class="display-4 text-primary">
+                                                <i class="bi bi-calendar-event"></i>
+                                            </div>
+                                            <div class="badge bg-primary my-1">
+                                                {{ evento.data_ora_inizio|date:"d/m/Y" }}
+                                            </div>
+                                            <div class="small">
+                                                {{ evento.data_ora_inizio|date:"H:i" }} - {{ evento.data_ora_fine|date:"H:i" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <h5 class="mb-1">{{ evento.nome }}</h5>
+                                            <p class="mb-1 text-muted">
+                                                {{ evento.descrizione|truncatechars:500 }}
+                                            </p>
+                                            <div class="small">
+                                                <strong>Organizzatore:</strong>
+                                                {% if evento.organizzatore %}
+                                                    {{ evento.organizzatore.get_full_name }}
+                                                {% else %}
+                                                    Centro Sportivo
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <div class="mb-2">
+                                                <div class="badge bg-{% if evento.posti_rimasti > 0 %}success{% else %}danger{% endif %}">
+                                                    {% if evento.posti_rimasti > 0 %}
+                                                        {{ evento.posti_rimasti }} posti disponibili
+                                                    {% else %}
+                                                        Evento completo
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                {% if evento.costo_iscrizione > 0 %}
+                                                    <span class="text-primary fw-bold">€ {{ evento.costo_iscrizione }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Gratuito</span>
+                                                {% endif %}
+                                            </div>
+
+                                             <!-- Bottone Iscrizione -->
+                                              {% if  user_type == 'cliente' or request.session.user_id  %}
+                                                    {% if evento.posti_rimasti > 0 %}
+                                                    <div class="mb-2">
+                                                        <form method="post" action="{% url 'centro_sportivo_app:iscrizione_evento' evento.id %}" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-success">
+                                                                <i class="bi bi-person-plus"></i> Iscriviti
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    {% endif %}
+                                              {% endif %}
+
+
+                                            <!-- Bottone Elimina per l'organizzatore -->
+                                            {% if request.session.user_id and evento.organizzatore and evento.organizzatore.id == request.session.user_id %}
+                                            <div class="mb-2">
+                                                <a href="{% url 'centro_sportivo_app:elimina_evento' evento.id %}"
+                                                   class="btn btn-sm btn-outline-danger"
+                                                   onclick="return confirm('Sei sicuro di voler eliminare questo evento? Questa azione non può essere annullata.')">
+                                                    <i class="bi bi-trash"></i> Elimina
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Paginazione -->
+                        {% if eventi.has_other_pages %}
+                            <div class="pagination justify-content-center py-3">
+                                <ul class="pagination">
+                                    {% if eventi.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ eventi.previous_page_number }}">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link"><i class="bi bi-chevron-left"></i></span>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for i in eventi.paginator.page_range %}
+                                        {% if eventi.number == i %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ i }}</span>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if eventi.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ eventi.next_page_number }}">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link"><i class="bi bi-chevron-right"></i></span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x display-1 text-muted"></i>
+                            <h4 class="text-muted mt-3">Nessun evento futuro programmato</h4>
+                            <p class="text-muted">Al momento non ci sono eventi futuri pianificati. Controlla più tardi!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventi Passati -->
+    {% if eventi_passati %}
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Eventi Passati
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for evento in eventi_passati %}
+                            <div class="list-group-item list-group-item-action">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 text-center">
+                                        <div class="display-4 text-secondary">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="badge bg-secondary my-1">
+                                            {{ evento.data_ora_inizio|date:"d/m/Y" }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h5 class="mb-1">{{ evento.nome }}</h5>
+                                        <p class="mb-1 text-muted">
+                                            {{ evento.descrizione|truncatechars:100 }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

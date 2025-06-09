@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Personale - Centro Sportivo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .staff-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .staff-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .role-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .role-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        .staff-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .contact-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 0.9em;
+        }
+        .hierarchy-line {
+            border-left: 3px solid #dee2e6;
+            margin-left: 20px;
+            padding-left: 20px;
+        }
+        .org-chart {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="row mb-5">
+            <div class="col">
+                <div class="text-center">
+                    <h1 class="display-4 mb-3">
+                        <i class="bi bi-people-fill text-primary"></i>
+                        Il Nostro Team
+                    </h1>
+                    <p class="lead text-muted">
+                        Conosci il personale qualificato del nostro centro sportivo
+                    </p>
+                    <div class="badge bg-primary fs-6 px-3 py-2">
+                        <i class="bi bi-person-badge"></i>
+                        {{ totale_personale }} membri del team
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Organigramma Semplificato -->
+        <div class="org-chart mb-5">
+            <h3 class="text-center mb-4">
+                <i class="bi bi-diagram-3"></i>
+                Struttura Organizzativa
+            </h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="text-center">
+                        <div class="d-inline-block p-3 bg-primary text-white rounded-3 mb-3">
+                            <i class="bi bi-person-crown"></i> Direzione
+                        </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="bg-info text-white p-2 rounded mb-2">
+                                        <i class="bi bi-gear"></i> Management
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="bg-success text-white p-2 rounded mb-2">
+                                        <i class="bi bi-person-workspace"></i> Operativo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personale per Ruolo -->
+        {% for ruolo, persone in personale_per_ruolo.items %}
+        <div class="mb-5">
+            <div class="role-header">
+                <h2 class="mb-2">
+                    <i class="bi bi-briefcase"></i>
+                    {{ ruolo }}
+                </h2>
+                <p class="mb-0 opacity-75">
+                    {{ persone|length }}
+                    {% if persone|length == 1 %}persona{% else %}persone{% endif %}
+                </p>
+            </div>
+
+            <div class="row">
+                {% for persona in persone %}
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card staff-card h-100">
+                        <div class="card-body text-center">
+                            <!-- Avatar -->
+                            <div class="mb-3">
+                                <div class="staff-avatar mx-auto bg-primary d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person-fill text-white fs-2"></i>
+                                </div>
+                            </div>
+
+                            <!-- Informazioni Base -->
+                            <h5 class="card-title mb-1">
+                                {{ persona.get_full_name }}
+                            </h5>
+                            <p class="text-muted mb-2">{{ persona.get_ruolo_display }}</p>
+
+                            <!-- Ambito di Competenza -->
+                            {% if persona.ambito_competenza %}
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">Competenze:</small>
+                                <span class="badge bg-light text-dark">{{ persona.ambito_competenza }}</span>
+                            </div>
+                            {% endif %}
+
+                            <!-- Contatti -->
+                            <div class="d-flex justify-content-center gap-2 mb-3">
+                                <a href="mailto:{{ persona.email }}" class="btn contact-badge btn-sm">
+                                    <i class="bi bi-envelope"></i>
+                                </a>
+
+                                {% if persona.telefono %}
+                                <a href="tel:{{ persona.telefono }}" class="btn contact-badge btn-sm">
+                                    <i class="bi bi-telephone"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+
+                            <!-- Orari di Servizio -->
+                            <div class="pt-3 border-top">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ persona.orario_servizio }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Sezione Contatti Generali -->
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h4 class="mb-3">
+                            <i class="bi bi-headset"></i>
+                            Hai bisogno di assistenza?
+                        </h4>
+                        <p class="text-muted mb-3">
+                            Il nostro team è sempre disponibile per aiutarti. Contatta la persona più adatta alle tue esigenze.
+                        </p>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <i class="bi bi-question-circle fs-1 text-primary"></i>
+                                    <h6 class="mt-2">Informazioni Generali</h6>
+                                    <small class="text-muted">Contatta la Receptionist</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <i class="bi bi-calendar-check fs-1 text-success"></i>
+                                    <h6 class="mt-2">Prenotazioni</h6>
+                                    <small class="text-muted">Responsabile Prenotazioni</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <i class="bi bi-heart-pulse fs-1 text-danger"></i>
+                                    <h6 class="mt-2">Fitness & Allenamento</h6>
+                                    <small class="text-muted">Consulta un Istruttore</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <i class="bi bi-tools fs-1 text-warning"></i>
+                                    <h6 class="mt-2">Problemi Tecnici</h6>
+                                    <small class="text-muted">Team Manutenzione</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

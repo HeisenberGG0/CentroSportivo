@@ -1,0 +1,158 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - I Miei Eventi{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">I Miei Eventi</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="bi bi-calendar-check"></i> I Miei Eventi
+                    </h2>
+                    <p class="text-muted mb-0">Eventi a cui sei iscritto</p>
+                </div>
+                <div>
+                    <a href="{% url 'centro_sportivo_app:lista_eventi' %}" class="btn btn-primary">
+                        <i class="bi bi-calendar-plus"></i> Cerca Nuovi Eventi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventi Futuri -->
+    <div class="row mb-5">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-week"></i> I Tuoi Prossimi Eventi
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if eventi_futuri %}
+                        <div class="list-group list-group-flush">
+                            {% for evento in eventi_futuri %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2 text-center">
+                                            <div class="display-4 text-primary">
+                                                <i class="bi bi-calendar-event"></i>
+                                            </div>
+                                            <div class="badge bg-primary my-1">
+                                                {{ evento.data_ora_inizio|date:"d/m/Y" }}
+                                            </div>
+                                            <div class="small">
+                                                {{ evento.data_ora_inizio|date:"H:i" }} - {{ evento.data_ora_fine|date:"H:i" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <h5 class="mb-1">{{ evento.nome }}</h5>
+                                            <p class="mb-1 text-muted">
+                                                {{ evento.descrizione|truncatechars:500 }}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            
+                                            {% if evento.data_ora_inizio > now %}
+                                                <form method="post" action="{% url 'centro_sportivo_app:cancella_iscrizione' evento.id %}" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-1">
+                                                        <i class="bi bi-x-circle"></i> Cancella Iscrizione
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x display-1 text-muted"></i>
+                            <h4 class="text-muted mt-3">Nessun evento futuro</h4>
+                            <p class="text-muted">
+                                Non sei iscritto a nessun evento futuro. 
+                                <a href="{% url 'centro_sportivo_app:lista_eventi' %}">Esplora gli eventi disponibili</a>.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventi Passati -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Eventi Passati
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if eventi_passati %}
+                        <div class="list-group list-group-flush">
+                            {% for evento in eventi_passati %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2 text-center">
+                                            <div class="display-4 text-secondary">
+                                                <i class="bi bi-calendar-check"></i>
+                                            </div>
+                                            <div class="badge bg-secondary my-1">
+                                                {{ evento.data_ora_inizio|date:"d/m/Y" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <h5 class="mb-1">{{ evento.nome }}</h5>
+                                            <p class="mb-1 text-muted">
+                                                {{ evento.descrizione|truncatechars:500 }}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <div class="mb-2">
+                                                {% if evento.presente %}
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle"></i> Hai partecipato
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="bi bi-x-circle"></i> Non hai partecipato
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            <a href="{% url 'centro_sportivo_app:dettaglio_evento' evento.id %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-info-circle"></i> Dettagli
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar display-1 text-muted"></i>
+                            <h4 class="text-muted mt-3">Nessun evento passato</h4>
+                            <p class="text-muted">Non hai ancora partecipato a eventi passati.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

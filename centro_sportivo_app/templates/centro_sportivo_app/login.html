@@ -1,0 +1,105 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Login{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="bi bi-box-arrow-in-right"></i> Accedi
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person"></i> Username
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="username" 
+                                   name="username" 
+                                   required 
+                                   placeholder="Inserisci il tuo username">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Inserisci la tua password">
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Accedi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer text-center py-3">
+                    <p class="mb-0">
+                        Non hai ancora un account? 
+                        <a href="{% url 'centro_sportivo_app:register' %}" class="text-decoration-none">
+                            <i class="bi bi-person-plus"></i> Registrati qui
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sezione per informazioni per il login cliente/staff -->
+<div class="container py-2">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading">
+                    <i class="bi bi-info-circle"></i> Informazioni per l'accesso
+                </h5>
+                <p class="mb-1">
+                    <strong>Clienti:</strong> Utilizzate le credenziali create durante la registrazione per accedere alle funzionalità di prenotazione e gestione del vostro profilo.
+                </p>
+                <p class="mb-0">
+                    <strong>Personale:</strong> Utilizzate le credenziali fornite dall'amministrazione per accedere alle funzionalità di gestione del centro sportivo.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary-custom:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.5);
+    }
+</style>
+{% endblock %}

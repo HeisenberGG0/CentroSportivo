@@ -1,0 +1,192 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Crea Nuovo Evento{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'centro_sportivo_app:lista_eventi' %}">Eventi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Crea Nuovo Evento</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="bi bi-plus-circle"></i> Crea Nuovo Evento
+                    </h2>
+                    <p class="text-muted mb-0">Inserisci i dettagli per il nuovo evento sportivo</p>
+                </div>
+                <div>
+                    <a href="{% url 'centro_sportivo_app:dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Annulla
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil"></i> Informazioni Evento
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'centro_sportivo_app:crea_evento' %}">
+                        {% csrf_token %}
+                        
+                        {% if errori %}
+                            <div class="alert alert-danger mb-4">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-exclamation-triangle"></i> Errori nel form
+                                </h6>
+                                <ul class="mb-0">
+                                    {% for errore in errori %}
+                                        <li>{{ errore }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome Evento *</label>
+                            <input type="text" class="form-control" id="nome" name="nome" 
+                                   placeholder="Inserisci il nome dell'evento" required
+                                   value="{{ form_data.nome }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="descrizione" class="form-label">Descrizione *</label>
+                            <textarea class="form-control" id="descrizione" name="descrizione" 
+                                      rows="5" placeholder="Descrivi l'evento in dettaglio" required>{{ form_data.descrizione }}</textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="data_ora_inizio" class="form-label">Data e Ora Inizio *</label>
+                                <input type="datetime-local" class="form-control" id="data_ora_inizio" 
+                                       name="data_ora_inizio" required min="{{ now }}"
+                                       value="{{ form_data.data_ora_inizio }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="data_ora_fine" class="form-label">Data e Ora Fine *</label>
+                                <input type="datetime-local" class="form-control" id="data_ora_fine" 
+                                       name="data_ora_fine" required min="{{ now }}"
+                                       value="{{ form_data.data_ora_fine }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="posti_disponibili" class="form-label">Posti Disponibili *</label>
+                                <input type="number" class="form-control" id="posti_disponibili" 
+                                       name="posti_disponibili" min="1" required
+                                       value="{{ form_data.posti_disponibili|default:20 }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="costo_iscrizione" class="form-label">Costo Iscrizione (€)</label>
+                                <input type="number" class="form-control" id="costo_iscrizione" 
+                                       name="costo_iscrizione" min="0" step="0.01"
+                                       value="{{ form_data.costo_iscrizione|default:0 }}">
+                                <small class="form-text text-muted">Lascia 0 per eventi gratuiti</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="impianti" class="form-label">Impianti Utilizzati *</label>
+                            <select class="form-select" id="impianti" name="impianti" multiple required>
+                                {% for impianto in impianti_disponibili %}
+                                    <option value="{{ impianto.id }}" 
+                                            {% if form_data.impianti and impianto.id|stringformat:"i" in form_data.impianti %}selected{% endif %}>
+                                        {{ impianto.nome }} ({{ impianto.get_tipologia_display }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Tieni premuto Ctrl (Cmd su Mac) per selezionare più impianti</small>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-calendar-plus"></i> Crea Evento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Informazioni Utili
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold">Tipi di Eventi</h6>
+                    <p class="mb-3">Puoi creare vari tipi di eventi sportivi come tornei, lezioni di gruppo, allenamenti o giornate promozionali.</p>
+                    
+                    <h6 class="fw-bold">Gestione Impianti</h6>
+                    <p class="mb-3">Seleziona gli impianti che verranno utilizzati durante l'evento. Assicurati che siano disponibili per l'orario scelto.</p>
+                    
+                    <h6 class="fw-bold">Iscrizioni</h6>
+                    <p class="mb-0">Imposta il numero massimo di partecipanti e il costo di iscrizione. Se l'evento è gratuito, lascia il costo a 0.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-check"></i> Suggerimenti
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Fornisci una descrizione dettagliata dell'evento
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Controlla la disponibilità degli impianti
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Pianifica con anticipo per dare tempo ai clienti di iscriversi
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Ricorda di registrare le presenze il giorno dell'evento
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Validazione per data fine successiva a data inizio
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataInizioInput = document.getElementById('data_ora_inizio');
+        const dataFineInput = document.getElementById('data_ora_fine');
+        
+        dataInizioInput.addEventListener('change', function() {
+            dataFineInput.min = this.value;
+            if (dataFineInput.value && dataFineInput.value < this.value) {
+                dataFineInput.value = this.value;
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends 'centro_sportivo_app/base.html' %}
+
+{% block title %}Centro Sportivo - Homepage{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-trophy"></i> Centro Sportivo
+                </h1>
+                <p class="lead mb-4">
+                    Benvenuto sul sito del nostro centro sportivo! Prenota i tuoi campi preferiti,
+                    partecipa agli eventi e gestisci le tue prenotazioni in modo semplice e veloce.
+                </p>
+                {% if not request.session.user_id %}
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'centro_sportivo_app:register' %}" class="btn btn-light btn-lg">
+                            <i class="bi bi-person-plus"></i> Registrati Ora
+                        </a>
+                        <a href="{% url 'centro_sportivo_app:login' %}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Accedi
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'centro_sportivo_app:dashboard' %}" class="btn btn-light btn-lg">
+                            <i class="bi bi-speedometer2"></i> Vai alla Dashboard
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi display-1 text-white-50"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- sezione servizi  -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">I Nostri Servizi</h2>
+                <p class="lead text-muted">Scopri tutto quello che il nostro centro sportivo può offrirti!</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Prenotazioni -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Prenotazioni</h5>
+                        <p class="card-text">
+                            Prenota facilmente i tuoi campi preferiti con il nostro sistema online.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Eventi -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-event display-4 text-success mb-3"></i>
+                        <h5 class="card-title">Eventi Sportivi</h5>
+                        <p class="card-text">
+                            Partecipa ai nostri tornei, corsi ed eventi speciali organizzati dal centro.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Impianti -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-geo-alt display-4 text-warning mb-3"></i>
+                        <h5 class="card-title">Impianti Moderni</h5>
+                        <p class="card-text">
+                            Campi da calcio, tennis, padel e molto altro con attrezzature di qualità.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gestione -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-person-workspace display-4 text-info mb-3"></i>
+                        <h5 class="card-title">Gestione Facile</h5>
+                        <p class="card-text">
+                            Interfaccia intuitiva per gestire prenotazioni, pagamenti e molto altro.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Impianti Disponibili Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">Le Nostre Strutture</h2>
+                <p class="lead text-muted">Impianti moderni e attrezzature di qualità per ogni sport</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3">⚽</div>
+                        <h5 class="card-title">Campi da Calcio</h5>
+                        <p class="card-text">Campi in erba sintetica di ultima generazione per partite tra amici e allenamenti.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                         <div class="display-4 mb-3">🎾</div>
+                        <h5 class="card-title">Campi da Tennis</h5>
+                        <p class="card-text">Superfici professionali per ogni livello di gioco, dal principiante al professionista.</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3">🏀</div>
+                        <h5 class="card-title">Campi da Basket</h5>
+                        <p class="card-text">I nostri campi sono dotati di canestri nuovi e superfici ideali per partite appassionanti. </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="display-4 mb-3">🏐</div>
+                        <h5 class="card-title">Campi da Pallavolo</h5>
+                        <p class="card-text">Situati all'interno della nostra palestra, offrono lo spazio perfetto per le tue sfide a rete.  </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="display-3 mb-3">🏸</div>
+                        <h5 class="card-title">Campi da Padel</h5>
+                        <p class="card-text">Le strutture più moderne per lo sport più di tendenza, il padel.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- sezione finale per invogliare all'iscrizione-->
+{% if not request.session.user_id %}
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Inizia Subito!</h2>
+        <p class="lead mb-4">Registrati ora e inizia a prenotare i tuoi campi preferiti</p>
+        <a href="{% url 'centro_sportivo_app:register' %}" class="btn btn-light btn-lg">
+            <i class="bi bi-person-plus"></i> Registrati Gratuitamente
+        </a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
