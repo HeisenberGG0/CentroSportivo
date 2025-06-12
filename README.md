@@ -1,79 +1,209 @@
-***Traccia d’Esame – Progetto di Sistema Informativo per Centro Sportivo***
+#  Centro Sportivo - Sistema Informativo Completo
 
-Il progetto prevede la realizzazione di un sistema informativo completo per modernizzare la gestione di un centro sportivo, sostituendo le attuali procedure manuali con un'applicazione web intuitiva ed efficiente. Il cuore del sistema sarà un database SQL che conterrà tutte le informazioni necessarie per organizzare in modo efficace le prenotazioni, la gestione delle risorse e il profilo degli utenti.
-
-Il database includerà i dettagli di tutti gli impianti sportivi presenti nel centro, come campi da calcio, tennis, e padel. Per ogni impianto verranno memorizzate informazioni come la tipologia del campo, la disponibilità oraria, la capienza massima e lo stato attuale. Sarà possibile visualizzare rapidamente la disponibilità di ciascun campo in base alla data e all’orario.
-
-Gli utenti del sistema saranno principalmente suddivisi tra clienti privati e staff del centro sportivo, con ruoli e privilegi differenziati. Per i clienti verranno registrati dati come nome, contatto e storico prenotazioni; per lo staff invece saranno rilevanti ruoli (ad esempio: responsabile prenotazioni, manutenzione), orari di servizio e ambito di competenza. L’accesso al sistema sarà regolato da credenziali personali.
-
-La funzionalità principale dell'applicazione sarà la gestione delle prenotazioni, che consentirà agli utenti di riservare un campo per una determinata fascia oraria, modificare o disdire la prenotazione. 
-
-L'applicazione includerà anche la possibilità di gestire eventi sportivi organizzati dal centro, come tornei, lezioni di gruppo, allenamenti collettivi o giornate promozionali. Il sistema permetterà la pubblicazione delle informazioni sull’evento e l’iscrizione dei partecipanti.
-
-Infine, sarà presente una sezione dedicata alla gestione del personale, in cui saranno registrati i membri dello staff, le loro mansioni e i rapporti gerarchici. Questa sezione faciliterà l’organizzazione interna e offrirà un riferimento chiaro agli utenti che desiderano contattare il centro per informazioni o assistenza specifica.
-
-**Obiettivi del Progetto**
-
-1. *Analisi e progettazione concettuale*
-
-A partire dalla descrizione del contesto, analizza il dominio e costruisci un modello entità-relazione completo, includendo eventuali relazioni di generalizzazione/specializzazione tra entità. Spiega in modo chiaro come hai gestito tali relazioni e motiva le scelte effettuate.
-
-2. *Progettazione logica*
-
-Deriva il modello logico relazionale dal modello E-R, includendo una descrizione scritta dei vincoli rilevanti e giustificando eventuali semplificazioni o adattamenti.
-
-3. *Implementazione del sistema informativo*
-   
-Utilizzando Django, realizza un’applicazione che permetta la gestione dei dati modellati e l’accesso ad almeno quattro funzionalità tra quelle previste nella descrizione iniziale. Tra le funzionalità realizzabili, si possono includere:
-
-•	Registrazione e autenticazione degli utenti (differenziati per ruolo).
-
-•	Registrazione e gestione delle prenotazioni.
-
-•	Visualizzazione e iscrizione agli eventi.
-
-•	Visualizzazione e ricerca disponibilità.
-
-• Visualizzazione del personale e della struttura organizzativa.
-
-• Eliminazione e modifica di prenotazioni.
-
-• Modifiche e cancellazione di eventi.
-
-*L’applicazione deve essere realizzata utilizzando esclusivamente:*
-
-•	Backend Django
-
-•	Sistema di template di Django per la generazione delle pagine
-
-•	Bootstrap CSS per la parte grafica
-
-L’uso di JavaScript è da limitare ai soli casi in cui sia indispensabile.
-
-***Consegna**
-
-Il progetto deve essere caricato su un repository GitHub privato. Il link al repository va condiviso via e-mail con il docente almeno 7 giorni prima della data dell’esame.
-Il repository deve contenere:
-
-•	Documentazione con il modello informativo e le scelte progettuali.
-
-•	Codice sorgente completo e funzionante.
-
-•	Dati di esempio sufficienti per mostrare il funzionamento del sistema (dump del database).
-
-•	Istruzioni per installazione e avvio del progetto.
+Un'applicazione web sviluppata in **Django** che sostituisce le procedure manuali con un sistema digitale completo per la gestione di prenotazioni, eventi e personale di un centro sportivo.
 
 
-***Bonus (facoltativo)***
+##  Obiettivi del Progetto
 
-È possibile includere una simulazione di attacco al sistema, ad esempio:
+Il sistema è stato progettato per rispondere alle seguenti esigenze:
 
-•	SQL injection
+- **Modernizzazione**: Sostituzione delle procedure manuali con un sistema digitale
+- **Gestione Centralizzata**: Database SQL unificato per tutte le operazioni
+- **Multi-Utente**: Accesso differenziato per clienti e staff
+- **Efficienza**: Gestione automatizzata di prenotazioni ed eventi
 
-•	attacco a dizionario
+---
 
-•	attacco brute-force
+## Caratteristiche Principali
 
-Lo scopo è mostrare come vulnerabilità comuni possono essere sfruttate e come è possibile prevenirle con misure appropriate.
+###  **Gestione Utenti**
+- Registrazione e autenticazione differenziata (Clienti/Staff)
+- Profili personalizzati con storico prenotazioni
+- Sistema di ruoli e privilegi
+
+### **Gestione Strutture Sportive**
+- Catalogo completo degli impianti (calcio, tennis, padel)
+- Monitoraggio disponibilità in tempo reale
+- Gestione capienza e stato delle strutture
+
+###  **Sistema Prenotazioni**
+- Prenotazione online con selezione data/orario
+- Modifica e cancellazione prenotazioni
+- Visualizzazione calendario disponibilità
+
+### **Gestione Eventi**
+- Creazione e pubblicazione eventi sportivi
+- Sistema di iscrizione partecipanti
+- Gestione tornei e lezioni di gruppo
+
+### **Amministrazione Staff**
+- Gestione membri del personale
+- Definizione ruoli e competenze
+- Struttura organizzativa del centro
+
+---
+
+##  Tecnologie Utilizzate
+
+| Componente | Tecnologia |
+|------------|------------|
+| **Backend** | [Django] Python 3.13 |
+| **Database** | [SQLite]|
+| **Frontend** | [Bootstrap]+ Django Templates |
+| **Styling** | [CSS3] Bootstrap CSS |
+
+---
+
+##  Requisiti di Sistema
+
+- **Python**: 3.13 o superiore
+- **Django**: Framework web Python
+- **SQLite**: Database (incluso di default)
+- **Browser**: Qualsiasi browser 
+
+---
+
+##  Installazione e Configurazione
+
+### **1. Clona il Repository**
+
+```bash
+git clone https://github.com/HeisenberGG0/CentroSportivo.git
+cd CentroSportivo
+```
+
+### 🔧 **2. Installa le Dipendenze**
+
+```bash
+pip install django
+```
+
+### **3. Configura il Database**
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+###  **4. Carica i Dati di Prova** *Raccomandato*
+
+Il progetto include un file `dump.sql` con dati di esempio completi:
+
+```bash
+sqlite3 db.sqlite3 < dump.sql
+```
+
+>  **Dati inclusi**: Utenti di test, strutture sportive, eventi di esempio, prenotazioni campione
+
+###  **5. Crea Superuser** *(Opzionale)*
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+##  Avvio del Sistema
+
+###  **Avvia il Server**
+
+```bash
+python manage.py runserver
+```
+
+###  **Accesso alle Interfacce**
+
+| Interfaccia | URL | Descrizione |
+|-------------|-----|-------------|
+|  **Homepage** | http://127.0.0.1:8000/ | Interfaccia principale |
+|  **Admin Panel** | http://127.0.0.1:8000/admin/ | Pannello amministrativo |
+
+---
+
+##  Struttura del Progetto
+
+```
+CentroSportivo/
+├── manage.py                 # Script di gestione Django
+├──  dump.sql                 # Dati di prova completi
+├──  db.sqlite3               # Database SQLite
+├──  CentroSportivo/          # Configurazione progetto
+│   ├── settings.py         # Configurazioni sistema
+│   ├──  urls.py             # Routing principale
+│   ├──  wsgi.py & asgi.py   # Server configuration
+│   └──  __init__.py
+└── centro_sportivo_app/     # App principale
+    ├──  migrations/          # Migrazioni database
+    ├──  templates/          # Template HTML
+    ├──  admin.py           # Configurazione admin
+    ├──  forms.py            # Form di input
+    ├──  models.py           # Modelli database
+    ├──  views.py            # Logica applicazione
+    └──  urls.py             # URL app
+```
+
+---
+
+##  Guida all'Utilizzo
+
+###  **Per i Clienti**
+
+1. **Registrazione/Login** → Crea account o accedi
+2. **Esplora Strutture** → Visualizza campi disponibili  
+3. **Prenota** → Seleziona data, orario e struttura
+4. **Gestisci** → Modifica o cancella prenotazioni
+5. **Eventi** → Iscriviti a tornei e corsi
+
+###  **Per lo Staff**
+
+1. **Dashboard Staff** → Accesso con credenziali personale
+2. **Gestione Prenotazioni** → Monitora e gestisce prenotazioni
+3. **Creazione Eventi** → Organizza tornei e attività
+4. **Amministrazione** → Gestisce strutture e utenti
+
+---
+
+##  Dati di Prova Inclusi
+
+Il file `dump.sql` contiene un dataset completo per il testing:
+
+| Categoria | Contenuto |
+|-----------|-----------|
+|  **Utenti** | Account clienti e staff preconfigurati |
+|  **Strutture** | Campi da calcio, tennis, padel, palestre |
+|  **Eventi** | Tornei, corsi e attività sportive |
+|  **Prenotazioni** | Esempi di prenotazioni in vari stati |
+
+
+---
+
+##  Funzionalità Implementate
+
+ **Registrazione e autenticazione utenti differenziata**  
+ **Gestione completa delle prenotazioni**  
+ **Sistema eventi con iscrizioni**  
+ **Visualizzazione e ricerca disponibilità**  
+ **Gestione personale e struttura organizzativa**  
+ **Modifica e cancellazione prenotazioni/eventi**  
+
+---
+
+##  Modello Informativo
+
+Il sistema è basato su un **modello Entità-Relazione** che include:
+
+- **Entità principali**: Utenti, Strutture, Prenotazioni, Eventi, Staff
+- **Relazioni**: Gestione delle associazioni tra entità
+- **Vincoli**: Integrità referenziale e regole business
+- **Specializzazioni**: Differenziazione ruoli utente
+
+---
+
+## Sviluppo e Consegna
+
+> **Progetto Accademico** sviluppato secondo le specifiche della traccia d'esame
+
+
+**Sviluppato per il corso di Basi di Dati - Anno Accademico 24/25**
 
 
