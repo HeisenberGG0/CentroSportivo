@@ -26,7 +26,7 @@ def login_view(request):
         try:
             cliente = Cliente.objects.get(username=username, is_active=True)
             if cliente.check_password(password):
-                # Login riuscito - salva nella sessione
+                # Login riuscito, salva i dati nella sessione
                 request.session['user_id'] = cliente.pk
                 request.session['user_type'] = 'cliente'
                 request.session['username'] = cliente.username
@@ -40,11 +40,11 @@ def login_view(request):
         except Cliente.DoesNotExist:
             pass
 
-         # Prova con Personale
+         # Prova con personale
         try:
             personale = Personale.objects.get(username=username, is_active=True)
             if personale.check_password(password):
-                # Login riuscito - salva nella sessione
+                # Login riuscito, salva dati nella sessione
                 request.session['user_id'] = personale.pk
                 request.session['user_type'] = 'personale'
                 request.session['username'] = personale.username
@@ -58,7 +58,7 @@ def login_view(request):
         except Personale.DoesNotExist:
             pass
 
-        # Se arriviamo qui, login fallito
+        # Se arriviamo qui vuol dire login fallito
         messages.error(request, 'Username o password non corretti.')
 
     return render(request, 'centro_sportivo_app/login.html')
@@ -273,7 +273,7 @@ def dashboard(request):
     return render(request, 'centro_sportivo_app/dashboard.html', context)
 
 def get_current_user(request):
-    """Funzione di aiuto per ottenere l'utente corrente e che poi verra riutilizzato"""
+    """Funzione di aiuto per ottenere l'utente corrente e che poi verra riutilizzata"""
     if 'user_id' not in request.session or 'user_type' not in request.session:
         return None, None
 
@@ -314,7 +314,7 @@ def gestione_prenotazioni(request):
     if stato:
         prenotazioni = prenotazioni.filter(stato=stato)
 
-    #  Lista degli impianti per il dropdown
+    #  Lista degli impianti
     impianti = Impianto.objects.all().order_by('nome')
 
     prenotazioni_in_attesa = Prenotazione.objects.filter(stato='attesa').count()
@@ -445,7 +445,7 @@ def modifica_prenotazione(request, prenotazione_id):
         messages.error(request, 'Non hai i permessi per modificare le prenotazioni.')
         return redirect('centro_sportivo_app:gestione_prenotazioni')
 
-    # Non permettere modifiche per prenotazioni annullate
+    # Non permettere modifiche per prenotazioni gia annullate
     if prenotazione.stato in [ 'annullata']:
         messages.error(request, 'Non puoi modificare prenotazioni già annullate.')
         return redirect('centro_sportivo_app:mie_prenotazioni' if user_type == 'cliente'
@@ -492,7 +492,7 @@ def annulla_prenotazione(request, prenotazione_id):
 
     prenotazione = get_object_or_404(Prenotazione, id=prenotazione_id)
 
-    # Controlla i permessi
+    # Controlla i permessi dell'utente
     if user_type == 'cliente' and prenotazione.cliente != utente:
         messages.error(request, 'Non puoi annullare prenotazioni di altri clienti.')
         return redirect('centro_sportivo_app:mie_prenotazioni')
@@ -533,7 +533,7 @@ def ricerca_disponibilita(request):
 
         # Controlla la disponibilità di ogni impianto
         for impianto in impianti_query:
-            # Verifica manualmente la disponibilità
+            # verifica manualmente la disponibilità
             prenotazioni_sovrapposte = impianto.prenotazione_set.filter(
                 data=data,
                 stato__in=['attesa']
@@ -576,7 +576,7 @@ def gestione_personale(request):
     # Organizza il personale per ruolo
     personale_per_ruolo = {}
 
-    # Ottieni tutto il personale attivo ordinato per gerarchia
+    # prendiamo tutto il personale attivo ordinato per gerarchia
     tutto_personale = Personale.objects.filter(is_active=True).order_by('ruolo', 'cognome')
 
 
@@ -601,10 +601,6 @@ def gestione_personale(request):
         if ruolo in personale_per_ruolo:
             personale_ordinato[ruolo] = personale_per_ruolo[ruolo]
 
-    # Aggiungi eventuali ruoli non previsti
-    for ruolo, persone in personale_per_ruolo.items():
-        if ruolo not in personale_ordinato:
-            personale_ordinato[ruolo] = persone
 
     context = {
         'personale_per_ruolo': personale_ordinato,
@@ -648,12 +644,12 @@ from centro_sportivo_app.models import (
 def lista_eventi(request):
     tipologia_filtro = request.GET.get('tipologia')
 
-    # Base queryset per eventi futuri
+    # query base per eventi futuri
     eventi_futuri = Evento.objects.filter(
         data_ora_inizio__gte=timezone.now()
     )
 
-    # Base queryset per eventi passati
+    # query base per eventi passati
     eventi_passati = Evento.objects.filter(
         data_ora_inizio__lt=timezone.now()
     )
@@ -665,7 +661,7 @@ def lista_eventi(request):
 
 
     eventi_futuri = eventi_futuri.distinct().order_by('data_ora_inizio')
-    eventi_passati = eventi_passati.distinct().order_by('-data_ora_inizio')[:5]  # slice alla fine
+    eventi_passati = eventi_passati.distinct().order_by('-data_ora_inizio')[:5]
 
     # Implementa paginazione per gli eventi futuri
     paginator = Paginator(eventi_futuri, 10)
@@ -693,7 +689,7 @@ def crea_evento(request):
 
     utente, user_type = get_current_user(request)
 
-    # Verifica che l'utente sia autenticato e sia personale
+    # Verifica che l'utente sia autenticato e faccia parte del personale
     if not utente or user_type != 'personale':
         messages.error(request, "Solo il personale può creare eventi.")
         return redirect('centro_sportivo_app:lista_eventi')
@@ -789,7 +785,7 @@ def crea_evento(request):
             }
             return render(request, 'centro_sportivo_app/crea_evento.html', context)
 
-    # GET request - mostra form vuoto
+    # GET request, mostra form vuoto
     context = {
         'impianti_disponibili': impianti_disponibili,
         'now': timezone.now().strftime('%Y-%m-%dT%H:%M')
@@ -803,7 +799,7 @@ def crea_evento(request):
 def elimina_evento(request, evento_id):
     evento = get_object_or_404(Evento, pk=evento_id)
 
-    # Verifica che l'utente sia loggato nel tuo sistema personalizzato
+    # Verifica che l'utente sia loggato nel sistema
     if not request.session.get('user_id'):
         messages.error(request, "Devi essere loggato per eliminare gli eventi.")
         return redirect('centro_sportivo_app:lista_eventi')
@@ -888,7 +884,7 @@ def iscrizione_evento(request, evento_id):
             messages.error(request, "Si è verificato un errore durante l'iscrizione. Riprova.")
             return redirect('centro_sportivo_app:lista_eventi')
 
-    # GET request - mostra pagina di conferma iscrizione
+    # GET request, mostra pagina di conferma iscrizione
     context = {
         'evento': evento,
         'cliente': cliente
@@ -901,7 +897,7 @@ def iscrizione_evento(request, evento_id):
 def cancella_iscrizione(request, evento_id):
     evento = get_object_or_404(Evento, pk=evento_id)
 
-    # Verifica che l'utente sia loggato nel tuo sistema
+    # Verifica che l'utente sia loggato nel sistema
     if not request.session.get('user_id'):
         messages.error(request, "Devi essere loggato per cancellare l'iscrizione.")
         return redirect('centro_sportivo_app:lista_eventi')
@@ -913,7 +909,7 @@ def cancella_iscrizione(request, evento_id):
         messages.error(request, "Solo i clienti possono gestire le proprie iscrizioni.")
         return redirect('centro_sportivo_app:lista_eventi')
 
-    # Solo POST è permesso
+    # Solo tipo POST è permesso
     if request.method != 'POST':
         messages.error(request, "Metodo non consentito.")
         return redirect('centro_sportivo_app:miei_eventi')
@@ -935,7 +931,6 @@ def cancella_iscrizione(request, evento_id):
     messages.success(request, f"Iscrizione all'evento '{evento.nome}' cancellata con successo.")
     return redirect('centro_sportivo_app:miei_eventi')
 
-# Vista per gli eventi a cui un cliente è iscritto
 
 def miei_eventi(request):
     # Verifica che l'utente sia loggato nel tuo sistema personalizzato
