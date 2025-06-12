@@ -1,4 +1,5 @@
----Traccia d’Esame – Progetto di Sistema Informativo per Centro Sportivo---
+---Traccia d’Esame – Progetto di Sistema Informativo per Centro Sportivo---	
+
 Il progetto prevede la realizzazione di un sistema informativo completo per modernizzare la gestione di un centro sportivo, sostituendo le attuali procedure manuali con un'applicazione web intuitiva ed efficiente. Il cuore del sistema sarà un database SQL che conterrà tutte le informazioni necessarie per organizzare in modo efficace le prenotazioni, la gestione delle risorse e il profilo degli utenti.
 
 Il database includerà i dettagli di tutti gli impianti sportivi presenti nel centro, come campi da calcio, tennis, e padel. Per ogni impianto verranno memorizzate informazioni come la tipologia del campo, la disponibilità oraria, la capienza massima e lo stato attuale. Sarà possibile visualizzare rapidamente la disponibilità di ciascun campo in base alla data e all’orario.
