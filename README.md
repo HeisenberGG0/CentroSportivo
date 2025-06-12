@@ -34,6 +34,7 @@ Utilizzando Django, realizza un’applicazione che permetta la gestione dei dati
 • Modifiche e cancellazione di eventi
 
 L’applicazione deve essere realizzata utilizzando esclusivamente:
+
 •	Backend Django
 
 •	Sistema di template di Django per la generazione delle pagine
@@ -46,6 +47,7 @@ L’uso di JavaScript è da limitare ai soli casi in cui sia indispensabile.
 
 Il progetto deve essere caricato su un repository GitHub privato. Il link al repository va condiviso via e-mail con il docente almeno 7 giorni prima della data dell’esame.
 Il repository deve contenere:
+
 •	Documentazione con il modello informativo e le scelte progettuali.
 
 •	Codice sorgente completo e funzionante.
@@ -58,6 +60,7 @@ Il repository deve contenere:
 ---Bonus (facoltativo)---
 
 È possibile includere una simulazione di attacco al sistema, ad esempio:
+
 •	SQL injection
 
 •	attacco a dizionario
