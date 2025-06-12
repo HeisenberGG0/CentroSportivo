@@ -25,13 +25,20 @@ Deriva il modello logico relazionale dal modello E-R, includendo una descrizione
 3. Implementazione del sistema informativo
    
 Utilizzando Django, realizza un’applicazione che permetta la gestione dei dati modellati e l’accesso ad almeno quattro funzionalità tra quelle previste nella descrizione iniziale. Tra le funzionalità realizzabili, si possono includere:
+
 •	Registrazione e autenticazione degli utenti (differenziati per ruolo).
+
 •	Registrazione e gestione delle prenotazioni.
+
 •	Visualizzazione e iscrizione agli eventi.
+
 •	Visualizzazione e ricerca disponibilità.
-• Visualizzazione del personale e della struttura organizzativa
-• Eliminazione e modifica di prenotazioni
-• Modifiche e cancellazione di eventi
+
+• Visualizzazione del personale e della struttura organizzativa.
+
+• Eliminazione e modifica di prenotazioni.
+
+• Modifiche e cancellazione di eventi.
 
 L’applicazione deve essere realizzata utilizzando esclusivamente:
 
