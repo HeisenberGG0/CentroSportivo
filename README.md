@@ -1,4 +1,4 @@
-#  Centro Sportivo - Sistema Informativo Completo
+#  Centro Sportivo - Sistema Informativo 
 
 Un'applicazione web sviluppata in **Django** che sostituisce le procedure manuali con un sistema digitale completo per la gestione di prenotazioni, eventi e personale di un centro sportivo.
 
