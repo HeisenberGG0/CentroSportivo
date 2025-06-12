@@ -72,7 +72,7 @@ git clone https://github.com/HeisenberGG0/CentroSportivo.git
 cd CentroSportivo
 ```
 
-### 🔧 **2. Installa le Dipendenze**
+###  **2. Installa le Dipendenze**
 
 ```bash
 pip install django
