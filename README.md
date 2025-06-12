@@ -1,4 +1,3 @@
-﻿# Gestione_CentroSportivo
 # Centro Sportivo - Sistema di Gestione Prenotazioni
 
 Un sistema web sviluppato in Django per la gestione di un centro sportivo, che permette ai clienti di registrarsi, effettuare il login e prenotare strutture sportive ed eventi. Il sistema include anche un'interfaccia per il personale per gestire prenotazioni ed eventi.
