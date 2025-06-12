@@ -536,7 +536,7 @@ def ricerca_disponibilita(request):
             # Verifica manualmente la disponibilità
             prenotazioni_sovrapposte = impianto.prenotazione_set.filter(
                 data=data,
-                stato__in=['attesa']  # Usa gli stati che hai nel modello
+                stato__in=['attesa']
             ).filter(
                 Q(ora_inizio__lt=ora_fine) & Q(ora_fine__gt=ora_inizio)
             )
@@ -573,20 +573,20 @@ def ricerca_disponibilita(request):
 def gestione_personale(request):
     """View per mostrare l'organizzazione del personale"""
 
-    # Organizza il personale per ruolo/mansione
+    # Organizza il personale per ruolo
     personale_per_ruolo = {}
 
     # Ottieni tutto il personale attivo ordinato per gerarchia
     tutto_personale = Personale.objects.filter(is_active=True).order_by('ruolo', 'cognome')
 
-    # Raggruppa per ruolo usando get_ruolo_display()
+
     for persona in tutto_personale:
         ruolo_display = persona.get_ruolo_display()
         if ruolo_display not in personale_per_ruolo:
             personale_per_ruolo[ruolo_display] = []
         personale_per_ruolo[ruolo_display].append(persona)
 
-    # Definisci l'ordine gerarchico dei ruoli secondo il tuo modello
+
     ordine_ruoli = [
         'Manager',
         'Responsabile Prenotazioni',
@@ -663,7 +663,7 @@ def lista_eventi(request):
         eventi_futuri = eventi_futuri.filter(impianti_utilizzati__tipologia=tipologia_filtro)
         eventi_passati = eventi_passati.filter(impianti_utilizzati__tipologia=tipologia_filtro)
 
-    # ORDINA PRIMA, POI APPLICA IL SLICE
+
     eventi_futuri = eventi_futuri.distinct().order_by('data_ora_inizio')
     eventi_passati = eventi_passati.distinct().order_by('-data_ora_inizio')[:5]  # slice alla fine
 
@@ -801,7 +801,7 @@ def crea_evento(request):
 
 # Vista per l'eliminazione di un evento (solo staff)
 def elimina_evento(request, evento_id):
-    evento = get_object_or_404(Evento, pk=evento_id)  # Usa evento_id invece di pk
+    evento = get_object_or_404(Evento, pk=evento_id)
 
     # Verifica che l'utente sia loggato nel tuo sistema personalizzato
     if not request.session.get('user_id'):
@@ -826,7 +826,6 @@ def elimina_evento(request, evento_id):
         if conferma == 'elimina':
             nome_evento = evento.nome
 
-            # Elimina l'evento (le relazioni verranno eliminate automaticamente grazie al CASCADE)
             evento.delete()
 
             messages.success(request, f"Evento '{nome_evento}' eliminato con successo.")
@@ -849,7 +848,7 @@ def elimina_evento(request, evento_id):
 def iscrizione_evento(request, evento_id):
     evento = get_object_or_404(Evento, pk=evento_id)
 
-    # Verifica che l'utente sia loggato nel tuo sistema personalizzato
+    # Verifica che l'utente sia loggato
     if not request.session.get('user_id'):
         messages.error(request, "Devi essere loggato per iscriverti agli eventi.")
         return redirect('centro_sportivo_app:lista_eventi')
@@ -867,26 +866,20 @@ def iscrizione_evento(request, evento_id):
         return redirect('centro_sportivo_app:lista_eventi')
 
     # Verifica se ci sono ancora posti disponibili
-    if evento.posti_liberi() <= 0:  # Usa il metodo del modello
+    if evento.posti_liberi() <= 0:
         messages.error(request, "Non ci sono più posti disponibili per questo evento.")
         return redirect('centro_sportivo_app:lista_eventi')
 
     # Verifica se il cliente è già iscritto
-    if evento.partecipanti.filter(id=cliente.id).exists():  # Più elegante
+    if evento.partecipanti.filter(id=cliente.id).exists():
         messages.info(request, "Sei già iscritto a questo evento.")
         return redirect('centro_sportivo_app:lista_eventi')
 
     # Crea l'iscrizione
     if request.method == 'POST':
         try:
-            # METODO 1: Usa la relazione ManyToMany (RACCOMANDATO)
             evento.partecipanti.add(cliente)
 
-            # METODO 2: Alternativo - crea direttamente Partecipazione se hai campi extra
-            # partecipazione = Partecipazione.objects.create(
-            #     cliente=cliente,
-            #     evento=evento
-            # )
 
             messages.success(request, f"Iscrizione all'evento '{evento.nome}' completata con successo!")
             return redirect('centro_sportivo_app:lista_eventi')
