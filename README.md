@@ -192,7 +192,7 @@ Il file `dump.sql` contiene un dataset completo per il testing:
 
 Il sistema è basato su un **modello Entità-Relazione** che include:
 
-- **Entità principali**: Utenti, Strutture, Prenotazioni, Eventi, Staff
+- **Entità principali**: Clienti, Impianti, Prenotazioni, Eventi, Staff
 - **Relazioni**: Gestione delle associazioni tra entità
 - **Vincoli**: Integrità referenziale e regole business
 - **Specializzazioni**: Differenziazione ruoli utente
