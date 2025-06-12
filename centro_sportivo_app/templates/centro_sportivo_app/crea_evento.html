@@ -112,7 +112,7 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                            <small class="form-text text-muted">Tieni premuto Ctrl (Cmd su Mac) per selezionare più impianti</small>
+                            <small class="form-text text-muted">Tieni premuto Ctrl per selezionare più impianti</small>
                         </div>
                         
                         <div class="d-grid">
@@ -125,7 +125,7 @@
             </div>
         </div>
         
-        <!-- Sidebar -->
+        <!-- barra laterale -->
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
@@ -171,22 +171,4 @@
         </div>
     </div>
 </div>
-
-{% block extra_js %}
-<script>
-    // Validazione per data fine successiva a data inizio
-    document.addEventListener('DOMContentLoaded', function() {
-        const dataInizioInput = document.getElementById('data_ora_inizio');
-        const dataFineInput = document.getElementById('data_ora_fine');
-        
-        dataInizioInput.addEventListener('change', function() {
-            dataFineInput.min = this.value;
-            if (dataFineInput.value && dataFineInput.value < this.value) {
-                dataFineInput.value = this.value;
-            }
-        });
-    });
-</script>
-{% endblock %}
-
 {% endblock %}
