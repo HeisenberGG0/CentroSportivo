@@ -1,4 +1,4 @@
----Traccia d’Esame – Progetto di Sistema Informativo per Centro Sportivo---	
+***Traccia d’Esame – Progetto di Sistema Informativo per Centro Sportivo***
 
 Il progetto prevede la realizzazione di un sistema informativo completo per modernizzare la gestione di un centro sportivo, sostituendo le attuali procedure manuali con un'applicazione web intuitiva ed efficiente. Il cuore del sistema sarà un database SQL che conterrà tutte le informazioni necessarie per organizzare in modo efficace le prenotazioni, la gestione delle risorse e il profilo degli utenti.
 
@@ -12,17 +12,17 @@ L'applicazione includerà anche la possibilità di gestire eventi sportivi organ
 
 Infine, sarà presente una sezione dedicata alla gestione del personale, in cui saranno registrati i membri dello staff, le loro mansioni e i rapporti gerarchici. Questa sezione faciliterà l’organizzazione interna e offrirà un riferimento chiaro agli utenti che desiderano contattare il centro per informazioni o assistenza specifica.
 
----Obiettivi del Progetto---
+**Obiettivi del Progetto**
 
-1. Analisi e progettazione concettuale
+1. *Analisi e progettazione concettuale*
 
 A partire dalla descrizione del contesto, analizza il dominio e costruisci un modello entità-relazione completo, includendo eventuali relazioni di generalizzazione/specializzazione tra entità. Spiega in modo chiaro come hai gestito tali relazioni e motiva le scelte effettuate.
 
-2. Progettazione logica
+2. *Progettazione logica*
 
 Deriva il modello logico relazionale dal modello E-R, includendo una descrizione scritta dei vincoli rilevanti e giustificando eventuali semplificazioni o adattamenti.
 
-3. Implementazione del sistema informativo
+3. *Implementazione del sistema informativo*
    
 Utilizzando Django, realizza un’applicazione che permetta la gestione dei dati modellati e l’accesso ad almeno quattro funzionalità tra quelle previste nella descrizione iniziale. Tra le funzionalità realizzabili, si possono includere:
 
@@ -40,7 +40,7 @@ Utilizzando Django, realizza un’applicazione che permetta la gestione dei dati
 
 • Modifiche e cancellazione di eventi.
 
-L’applicazione deve essere realizzata utilizzando esclusivamente:
+*L’applicazione deve essere realizzata utilizzando esclusivamente:*
 
 •	Backend Django
 
@@ -50,7 +50,7 @@ L’applicazione deve essere realizzata utilizzando esclusivamente:
 
 L’uso di JavaScript è da limitare ai soli casi in cui sia indispensabile.
 
----Consegna---
+***Consegna**
 
 Il progetto deve essere caricato su un repository GitHub privato. Il link al repository va condiviso via e-mail con il docente almeno 7 giorni prima della data dell’esame.
 Il repository deve contenere:
@@ -64,7 +64,7 @@ Il repository deve contenere:
 •	Istruzioni per installazione e avvio del progetto.
 
 
----Bonus (facoltativo)---
+***Bonus (facoltativo)***
 
 È possibile includere una simulazione di attacco al sistema, ad esempio:
 
